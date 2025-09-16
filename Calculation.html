@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qi Breakthrough Time Calculator</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    /* Calculator Container */
+    .calculator {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1) inset;
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Heading Styling */
+    h2 {
+      text-align: center;
+      color: #4A90E2;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    /* Label Styling */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1) inset;
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Button Styling */
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    /* Result Styling */
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <h2>Qi Breakthrough Time Calculator</h2>
+    <label for="currentQi">Current Qi</label>
+    <input type="text" id="currentQi" placeholder="e.g., 2K">
+    <label for="maxQi">Max Qi</label>
+    <input type="text" id="maxQi" placeholder="e.g., 100K">
+    <label for="qiRate">Qi per second</label>
+    <input type="text" id="qiRate" placeholder="e.g., 2K">
+    <button onclick="calculateTime()">Calculate Breakthrough Time</button>
+    <div class="result" id="resultText"></div>
+  </div>
+
+  <script>
+    function parseNumber(value) {
+      const suffixes = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
+      const regex = /^(\d+(\.\d+)?)\s*([KMB])?$/i;
+      const match = value.trim().toUpperCase().match(regex);
+      if (!match) return NaN;
+      const number = parseFloat(match[1]);
+      const suffix = match[3];
+      return suffix ? number * suffixes[suffix] : number;
+    }
+
+    function formatNumber(value) {
+      const suffixes = ["", "K", "M", "B"];
+      let suffixIndex = 0;
+      while (value >= 1000 && suffixIndex < suffixes.length - 1) {
+        value /= 1000;
+        suffixIndex++;
+      }
+      return value.toFixed(2) + suffixes[suffixIndex];
+    }
+
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      let timeString = '';
+      if (hrs > 0) timeString += hrs + 'h ';
+      if (mins > 0 || hrs > 0) timeString += mins + 'm ';
+      timeString += secs + 's';
+      return timeString;
+    }
+
+    function calculateTime() {
+      const currentQi = parseNumber(document.getElementById('currentQi').value);
+      const maxQi = parseNumber(document.getElementById('maxQi').value);
+      const qiRate = parseNumber(document.getElementById('qiRate').value);
+
+      const resultDiv = document.getElementById('resultText');
+
+      if (isNaN(currentQi) || isNaN(maxQi) || isNaN(qiRate)) {
+        resultDiv.innerText = "Please fill in all fields with valid numbers.";
+        return;
+      }
+      if (qiRate <= 0) {
+        resultDiv.innerText = "Qi rate must be greater than zero.";
+        return;
+      }
+      if (currentQi >= maxQi) {
+        resultDiv.innerText = "You've already reached or exceeded your max Qi!";
+        return;
+      }
+
+      const qiNeeded = maxQi - currentQi;
+      const seconds = qiNeeded / qiRate;
+
+      resultDiv.innerText = 
+        "Time to breakthrough: " + formatNumber(seconds) + " (" + formatTime(seconds) + ")";
+    }
+  </script>
+
+</body>
+</html>
