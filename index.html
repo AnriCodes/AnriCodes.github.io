@@ -5,186 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cultivation Stat Growth Calculator</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-  body {
-    background: linear-gradient(135deg, #89f7fe, #66a6ff);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
-  }
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body {
+  background: linear-gradient(135deg,#89f7fe,#66a6ff);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:40px 20px;
+}
+h1 {
+  text-align:center;
+  width:100%;
+  color:#fff;
+  margin-bottom:30px;
+  font-size:2rem;
+  text-shadow:0 2px 5px rgba(0,0,0,0.3);
+}
+.calculator { width:100%; max-width:950px; }
 
-  h1 {
-    text-align: center;
-    width: 100%;
-    color: #fff;
-    margin-bottom: 30px;
-    font-size: 2.5rem;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-  }
+.stat-card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display:flex;
+  flex-wrap: wrap;
+  align-items:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+.stat-card:hover { transform: translateY(-5px); }
 
-  .calculator { width: 100%; max-width: 950px; }
+.stat-label { flex:0 0 100px; font-weight:bold; color:#fff; font-size:1rem; margin-right:10px; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
 
-  .stat-card {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
-  }
-  .stat-card:hover { transform: translateY(-5px); }
+.input-group {
+  display:flex;
+  margin:3px;
+}
+.stat-input {
+  flex:1;
+  padding:6px;
+  border-radius:6px 0 0 6px;
+  border:none;
+  background:rgba(255,255,255,0.9);
+  text-align:center;
+  font-size:0.9rem;
+}
+.stat-input:focus { outline:none; transform:scale(1.05); }
 
-  .stat-label {
-    flex: 1 1 120px;
-    font-weight: bold;
-    color: #fff;
-    font-size: 1.2rem;
-    margin-right: 15px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  }
+.suffix {
+  padding:6px;
+  border-radius:0 6px 6px 0;
+  border:none;
+  background:rgba(255,255,255,0.85);
+  cursor:pointer;
+  font-weight:bold;
+  text-transform:uppercase;
+}
 
-  .input-group {
-    flex: 1 1 100px;
-    display: flex;
-    margin: 5px;
-  }
+.result {
+  flex:1 1 100%;
+  color:#fff;
+  font-weight:bold;
+  font-size:0.95rem;
+  text-align:center;
+  opacity:0;
+  transition: opacity 0.5s ease;
+  margin-top:5px;
+}
+.result.show { opacity:1; }
 
-  .stat-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 12px 0 0 12px;
-    border: none;
-    background: rgba(255,255,255,0.9);
-    text-align: center;
-    font-size: 1rem;
-    transition: transform 0.2s ease;
-  }
+.btn-calc {
+  width:100%;
+  padding:14px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background: linear-gradient(90deg, #ff8a00, #e52e71);
+  color:#fff;
+  box-shadow:0 6px 12px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-calc:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
 
-  .stat-input:focus { transform: scale(1.05); outline: none; }
+/* Color accents for each stat */
+.Strength { border-left:6px solid #ff4c4c; }
+.Psychics { border-left:6px solid #9b59b6; }
+.Defence { border-left:6px solid #3498db; }
+.Magic { border-left:6px solid #2ecc71; }
+.Health { border-left:6px solid #f39c12; }
 
-  .suffix {
-    padding: 10px;
-    border-radius: 0 12px 12px 0;
-    border: none;
-    background: rgba(255,255,255,0.85);
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .result {
-    flex: 1 1 150px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    margin-top: 10px;
-    width: 100%;
-  }
-  .result.show { opacity: 1; }
-
-  .btn-calc {
-    width: 100%;
-    padding: 16px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 16px;
-    cursor: pointer;
-    background: linear-gradient(90deg, #ff8a00, #e52e71);
-    color: #fff;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 10px;
-  }
-  .btn-calc:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-
-  /* Color accents for each stat */
-  .Strength { border-left: 8px solid #ff4c4c; }
-  .Psychics { border-left: 8px solid #9b59b6; }
-  .Defence { border-left: 8px solid #3498db; }
-  .Magic { border-left: 8px solid #2ecc71; }
-  .Health { border-left: 8px solid #f39c12; }
-
-  @media (max-width: 700px) {
-    .stat-card { flex-direction: column; align-items: flex-start; }
-    .stat-label, .result { text-align: left; }
-    .input-group { width: 100%; }
-  }
+@media(max-width:700px) {
+  .stat-card { flex-direction:column; align-items:flex-start; }
+  .stat-label,.result { text-align:left; }
+  .input-group { width:100%; }
+}
 </style>
 </head>
 <body>
-
 <div class="calculator">
-  <h1>Cultivation Stat Growth Calculator</h1>
+<h1>Cultivation Stat Growth Calculator</h1>
 
-  <!-- Repeat for each stat -->
-  <div class="stat-card Strength" data-stat="Strength">
-    <div class="stat-label">Strength</div>
-    <div class="input-group">
-      <input type="text" class="stat-input current" placeholder="Current">
-      <select class="suffix">
-        <option value="">None</option>
-        <option value="K">K</option>
-        <option value="M">M</option>
-        <option value="B">B</option>
-        <option value="T">T</option>
-        <option value="QD">QD</option>
-        <option value="QN">QN</option>
-        <option value="SX">SX</option>
-        <option value="SP">SP</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <input type="text" class="stat-input rate" placeholder="Per Tick">
-      <select class="suffix">
-        <option value="">None</option>
-        <option value="K">K</option>
-        <option value="M">M</option>
-        <option value="B">B</option>
-        <option value="T">T</option>
-        <option value="QD">QD</option>
-        <option value="QN">QN</option>
-        <option value="SX">SX</option>
-        <option value="SP">SP</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <input type="text" class="stat-input goal" placeholder="Goal">
-      <select class="suffix">
-        <option value="">None</option>
-        <option value="K">K</option>
-        <option value="M">M</option>
-        <option value="B">B</option>
-        <option value="T">T</option>
-        <option value="QD">QD</option>
-        <option value="QN">QN</option>
-        <option value="SX">SX</option>
-        <option value="SP">SP</option>
-      </select>
-    </div>
-    <div class="result"></div>
-  </div>
+<!-- Function to generate each stat card -->
+<div class="stat-card Strength" data-stat="Strength">
+  <div class="stat-label">Strength</div>
+  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="result"></div>
+</div>
 
-  <!-- Copy the above block for Psychics, Defence, Magic, Health -->
-  <div class="stat-card Psychics" data-stat="Psychics">
-    <div class="stat-label">Psychics</div>
-    <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option value="K">K</option><option value="M">M</option><option value="B">B</option><option value="T">T</option><option value="QD">QD</option><option value="QN">QN</option><option value="SX">SX</option><option value="SP">SP</option></select></div>
-    <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option value="K">K</option><option value="M">M</option><option value="B">B</option><option value="T">T</option><option value="QD">QD</option><option value="QN">QN</option><option value="SX">SX</option><option value="SP">SP</option></select></div>
-    <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option value="K">K</option><option value="M">M</option><option value="B">B</option><option value="T">T</option><option value="QD">QD</option><option value="QN">QN</option><option value="SX">SX</option><option value="SP">SP</option></select></div>
-    <div class="result"></div>
-  </div>
+<div class="stat-card Psychics" data-stat="Psychics">
+  <div class="stat-label">Psychics</div>
+  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="result"></div>
+</div>
 
-  <!-- Repeat for Defence, Magic, Health in same style -->
+<div class="stat-card Defence" data-stat="Defence">
+  <div class="stat-label">Defence</div>
+  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="result"></div>
+</div>
 
-  <button class="btn-calc" onclick="calculateAll()">Calculate</button>
+<div class="stat-card Magic" data-stat="Magic">
+  <div class="stat-label">Magic</div>
+  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="result"></div>
+</div>
+
+<div class="stat-card Health" data-stat="Health">
+  <div class="stat-label">Health</div>
+  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
+  <div class="result"></div>
+</div>
+
+<button class="btn-calc" onclick="calculateAll()">Calculate</button>
 </div>
 
 <script>
@@ -198,45 +164,29 @@ function getValueWithSuffix(input) {
 }
 
 function formatTime(seconds) {
-  if (seconds <= 0) return "Goal reached!";
-  const days = Math.floor(seconds / 86400);
-  const hrs = Math.floor((seconds % 86400) / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  let str = '';
-  if (days) str += days+'d ';
-  if (hrs || days) str += hrs+'h ';
-  if (mins || hrs || days) str += mins+'m ';
-  str += secs+'s';
-  return str;
+  if(seconds<=0) return "Goal reached!";
+  const d=Math.floor(seconds/86400), h=Math.floor((seconds%86400)/3600), m=Math.floor((seconds%3600)/60), s=Math.floor(seconds%60);
+  return (d?d+'d ':'')+(h||d?h+'h ':'')+(m||h||d?m+'m ':'')+s+'s';
 }
 
 function calculateAll() {
-  const cards = document.querySelectorAll(".stat-card");
-  cards.forEach(card => {
-    const stat = card.getAttribute("data-stat");
-    const current = getValueWithSuffix(card.querySelector(".current"));
-    const rate = getValueWithSuffix(card.querySelector(".rate"));
-    const goal = getValueWithSuffix(card.querySelector(".goal"));
-    const resultDiv = card.querySelector(".result");
-
-    if (isNaN(current) || isNaN(rate) || isNaN(goal) || rate <= 0) {
-      resultDiv.innerText = "Invalid input";
-      resultDiv.classList.add("show");
-      return;
+  const cards=document.querySelectorAll(".stat-card");
+  cards.forEach(card=>{
+    const stat=card.getAttribute("data-stat");
+    const current=getValueWithSuffix(card.querySelector(".current"));
+    const rate=getValueWithSuffix(card.querySelector(".rate"));
+    const goal=getValueWithSuffix(card.querySelector(".goal"));
+    const resultDiv=card.querySelector(".result");
+    if(isNaN(current)||isNaN(rate)||isNaN(goal)||rate<=0){
+      resultDiv.innerText="Invalid input"; resultDiv.classList.add("show"); return;
     }
-
-    if (current >= goal) {
-      resultDiv.innerText = "Goal reached!";
-      resultDiv.classList.add("show");
-      return;
+    if(current>=goal){
+      resultDiv.innerText="Goal reached!"; resultDiv.classList.add("show"); return;
     }
-
-    const tickSpeed = (stat === "Psychics" || stat === "Health") ? 0.8 : 0.66;
-    const ticksNeeded = (goal - current) / rate;
-    const seconds = ticksNeeded * tickSpeed;
-
-    resultDiv.innerText = formatTime(seconds);
+    const tickSpeed=(stat==="Psychics"||stat==="Health")?0.8:0.66;
+    const ticksNeeded=(goal-current)/rate;
+    const seconds=ticksNeeded*tickSpeed;
+    resultDiv.innerText=formatTime(seconds);
     resultDiv.classList.add("show");
   });
 }
