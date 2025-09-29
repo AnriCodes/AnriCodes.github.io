@@ -1,220 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cultivation Stat Growth Calculator</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultivation Stat Growth Calculator</title>
+<style>
+  /* Reset */
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body {
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+  }
 
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
-      padding: 20px;
-    }
+  h1 {
+    text-align: center;
+    width: 100%;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
 
-    .calculator {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      padding: 30px;
-      width: 100%;
-      max-width: 900px;
-      backdrop-filter: blur(10px);
-    }
+  .calculator {
+    width: 100%;
+    max-width: 950px;
+  }
 
-    h2 {
-      text-align: center;
-      color: #4A90E2;
-      margin-bottom: 20px;
-      font-size: 26px;
-    }
+  .stat-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
 
-    th, td {
-      text-align: center;
-      padding: 12px;
-    }
+  .stat-label {
+    flex: 1 1 120px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
 
-    th {
-      background: #4A90E2;
-      color: white;
-      border-radius: 8px;
-    }
+  .stat-input {
+    flex: 1 1 100px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+  }
 
-    tr:nth-child(even) td {
-      background: rgba(240, 240, 240, 0.7);
-      border-radius: 8px;
-    }
+  .stat-input:focus {
+    transform: scale(1.05);
+    outline: none;
+  }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      text-align: center;
-    }
+  .result {
+    flex: 1 1 150px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease;
-    }
+  .result.show {
+    opacity: 1;
+  }
 
-    button:hover {
-      background: #45a049;
-    }
+  .btn-calc {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff8a00, #e52e71);
+    color: #fff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+  }
 
-    .result {
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+  .btn-calc:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  /* Color accents for each stat */
+  .Strength { border-left: 8px solid #ff4c4c; }
+  .Psychics { border-left: 8px solid #9b59b6; }
+  .Defence { border-left: 8px solid #3498db; }
+  .Magic { border-left: 8px solid #2ecc71; }
+  .Health { border-left: 8px solid #f39c12; }
+
+  @media (max-width: 700px) {
+    .stat-card { flex-direction: column; align-items: flex-start; }
+    .stat-label, .result { text-align: left; }
+    .stat-input { width: 100%; }
+  }
+</style>
 </head>
 <body>
-  <div class="calculator">
-    <h2>Cultivation Stat Growth Calculator</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Stat</th>
-          <th>Current</th>
-          <th>Per Tick</th>
-          <th>Goal</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr data-stat="Strength">
-          <td>Strength</td>
-          <td><input type="text" class="current"></td>
-          <td><input type="text" class="rate"></td>
-          <td><input type="text" class="goal"></td>
-          <td class="result"></td>
-        </tr>
-        <tr data-stat="Psychics">
-          <td>Psychics</td>
-          <td><input type="text" class="current"></td>
-          <td><input type="text" class="rate"></td>
-          <td><input type="text" class="goal"></td>
-          <td class="result"></td>
-        </tr>
-        <tr data-stat="Defence">
-          <td>Defence</td>
-          <td><input type="text" class="current"></td>
-          <td><input type="text" class="rate"></td>
-          <td><input type="text" class="goal"></td>
-          <td class="result"></td>
-        </tr>
-        <tr data-stat="Magic">
-          <td>Magic</td>
-          <td><input type="text" class="current"></td>
-          <td><input type="text" class="rate"></td>
-          <td><input type="text" class="goal"></td>
-          <td class="result"></td>
-        </tr>
-        <tr data-stat="Health">
-          <td>Health</td>
-          <td><input type="text" class="current"></td>
-          <td><input type="text" class="rate"></td>
-          <td><input type="text" class="goal"></td>
-          <td class="result"></td>
-        </tr>
-      </tbody>
-    </table>
-    <button onclick="calculateAll()">Calculate</button>
+
+<div class="calculator">
+  <h1>Cultivation Stat Growth Calculator</h1>
+
+  <div class="stat-card Strength" data-stat="Strength">
+    <div class="stat-label">Strength</div>
+    <input type="text" class="stat-input current" placeholder="Current">
+    <input type="text" class="stat-input rate" placeholder="Per Tick">
+    <input type="text" class="stat-input goal" placeholder="Goal">
+    <div class="result"></div>
   </div>
 
-  <script>
-    const suffixes = {
-      "K": 1e3,
-      "M": 1e6,
-      "B": 1e9,
-      "T": 1e12,
-      "QD": 1e15,
-      "QN": 1e18,
-      "SX": 1e21,
-      "SP": 1e24
-    };
+  <div class="stat-card Psychics" data-stat="Psychics">
+    <div class="stat-label">Psychics</div>
+    <input type="text" class="stat-input current" placeholder="Current">
+    <input type="text" class="stat-input rate" placeholder="Per Tick">
+    <input type="text" class="stat-input goal" placeholder="Goal">
+    <div class="result"></div>
+  </div>
 
-    function parseNumber(value) {
-      if (!value) return NaN;
-      value = value.trim().toUpperCase();
-      const regex = /^(\d+(\.\d+)?)([A-Z]{1,2})?$/;
-      const match = value.match(regex);
-      if (!match) return NaN;
-      let number = parseFloat(match[1]);
-      const suffix = match[3];
-      if (suffix && suffixes[suffix]) {
-        number *= suffixes[suffix];
-      }
-      return number;
+  <div class="stat-card Defence" data-stat="Defence">
+    <div class="stat-label">Defence</div>
+    <input type="text" class="stat-input current" placeholder="Current">
+    <input type="text" class="stat-input rate" placeholder="Per Tick">
+    <input type="text" class="stat-input goal" placeholder="Goal">
+    <div class="result"></div>
+  </div>
+
+  <div class="stat-card Magic" data-stat="Magic">
+    <div class="stat-label">Magic</div>
+    <input type="text" class="stat-input current" placeholder="Current">
+    <input type="text" class="stat-input rate" placeholder="Per Tick">
+    <input type="text" class="stat-input goal" placeholder="Goal">
+    <div class="result"></div>
+  </div>
+
+  <div class="stat-card Health" data-stat="Health">
+    <div class="stat-label">Health</div>
+    <input type="text" class="stat-input current" placeholder="Current">
+    <input type="text" class="stat-input rate" placeholder="Per Tick">
+    <input type="text" class="stat-input goal" placeholder="Goal">
+    <div class="result"></div>
+  </div>
+
+  <button class="btn-calc" onclick="calculateAll()">Calculate</button>
+</div>
+
+<script>
+const suffixes = {
+  "K": 1e3,
+  "M": 1e6,
+  "B": 1e9,
+  "T": 1e12,
+  "QD": 1e15,
+  "QN": 1e18,
+  "SX": 1e21,
+  "SP": 1e24
+};
+
+function parseNumber(value) {
+  if (!value) return NaN;
+  value = value.trim().toUpperCase();
+  const regex = /^(\d+(\.\d+)?)([A-Z]{1,2})?$/;
+  const match = value.match(regex);
+  if (!match) return NaN;
+  let number = parseFloat(match[1]);
+  const suffix = match[3];
+  if (suffix && suffixes[suffix]) {
+    number *= suffixes[suffix];
+  }
+  return number;
+}
+
+function formatTime(seconds) {
+  if (seconds <= 0) return "Goal reached!";
+  const days = Math.floor(seconds / 86400);
+  const hrs = Math.floor((seconds % 86400) / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  let timeString = '';
+  if (days > 0) timeString += days + 'd ';
+  if (hrs > 0 || days > 0) timeString += hrs + 'h ';
+  if (mins > 0 || hrs > 0 || days > 0) timeString += mins + 'm ';
+  timeString += secs + 's';
+  return timeString;
+}
+
+function calculateAll() {
+  const cards = document.querySelectorAll(".stat-card");
+  cards.forEach(card => {
+    const stat = card.getAttribute("data-stat");
+    const current = parseNumber(card.querySelector(".current").value);
+    const rate = parseNumber(card.querySelector(".rate").value);
+    const goal = parseNumber(card.querySelector(".goal").value);
+    const resultDiv = card.querySelector(".result");
+
+    if (isNaN(current) || isNaN(rate) || isNaN(goal) || rate <= 0) {
+      resultDiv.innerText = "Invalid input";
+      resultDiv.classList.add("show");
+      return;
     }
 
-    function formatTime(seconds) {
-      if (seconds <= 0) return "Goal reached!";
-      const days = Math.floor(seconds / 86400);
-      const hrs = Math.floor((seconds % 86400) / 3600);
-      const mins = Math.floor((seconds % 3600) / 60);
-      const secs = Math.floor(seconds % 60);
-      let timeString = '';
-      if (days > 0) timeString += days + 'd ';
-      if (hrs > 0 || days > 0) timeString += hrs + 'h ';
-      if (mins > 0 || hrs > 0 || days > 0) timeString += mins + 'm ';
-      timeString += secs + 's';
-      return timeString;
+    if (current >= goal) {
+      resultDiv.innerText = "Goal reached!";
+      resultDiv.classList.add("show");
+      return;
     }
 
-    function calculateAll() {
-      const rows = document.querySelectorAll("tbody tr");
+    const tickSpeed = (stat === "Psychics" || stat === "Health") ? 0.8 : 0.66;
+    const ticksNeeded = (goal - current) / rate;
+    const seconds = ticksNeeded * tickSpeed;
 
-      rows.forEach(row => {
-        const stat = row.getAttribute("data-stat");
-        const current = parseNumber(row.querySelector(".current").value);
-        const rate = parseNumber(row.querySelector(".rate").value);
-        const goal = parseNumber(row.querySelector(".goal").value);
-        const resultCell = row.querySelector(".result");
-
-        if (isNaN(current) || isNaN(rate) || isNaN(goal) || rate <= 0) {
-          resultCell.innerText = "Invalid input";
-          return;
-        }
-        if (current >= goal) {
-          resultCell.innerText = "Goal reached!";
-          return;
-        }
-
-        const tickSpeed = (stat === "Psychics" || stat === "Health") ? 0.8 : 0.66;
-        const ticksNeeded = (goal - current) / rate;
-        const seconds = ticksNeeded * tickSpeed;
-
-        resultCell.innerText = formatTime(seconds);
-      });
-    }
-  </script>
+    resultDiv.innerText = formatTime(seconds);
+    resultDiv.classList.add("show");
+  });
+}
+</script>
 </body>
 </html>
