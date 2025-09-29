@@ -73,9 +73,8 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2) inset;
 }
 
-.suffix {
+.suffix, .tick {
   padding:7px;
-  border-radius:0 6px 6px 0;
   border:none;
   background: rgba(255,255,255,0.85);
   cursor:pointer;
@@ -83,7 +82,10 @@ h1 {
   text-transform:uppercase;
   transition: background 0.2s ease;
 }
-.suffix:hover { background: rgba(255,255,255,1); }
+.suffix:hover, .tick:hover { background: rgba(255,255,255,1); }
+
+.suffix { border-radius:0 6px 0 0; }
+.tick { border-radius:0 0 6px 0; margin-left:2px; }
 
 .result {
   flex:1 1 100%;
@@ -125,7 +127,8 @@ h1 {
 @media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
   .stat-label,.result { text-align:left; }
-  .input-group { width:100%; }
+  .input-group { width:100%; flex-wrap:wrap; }
+  .tick { margin-left:0; margin-top:2px; }
 }
 </style>
 </head>
@@ -134,58 +137,57 @@ h1 {
 <div class="calculator">
 <h1>🦾 Super Power Training League Calculator</h1>
 
-<!-- Stat Card Template -->
-<div class="stat-card Strength" data-stat="Strength">
-  <div class="stat-label">Strength</div>
-  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="result"></div>
-</div>
-
-<div class="stat-card Psychics" data-stat="Psychics">
-  <div class="stat-label">Psychics</div>
-  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="result"></div>
-</div>
-
-<div class="stat-card Defence" data-stat="Defence">
-  <div class="stat-label">Defence</div>
-  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="result"></div>
-</div>
-
-<div class="stat-card Magic" data-stat="Magic">
-  <div class="stat-label">Magic</div>
-  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="result"></div>
-</div>
-
-<div class="stat-card Health" data-stat="Health">
-  <div class="stat-label">Health</div>
-  <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input rate" placeholder="Per Tick"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="input-group"><input type="text" class="stat-input goal" placeholder="Goal"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
-  <div class="result"></div>
-</div>
-
-<button class="btn-calc" onclick="calculateAll()">Calculate</button>
-</div>
+<div id="cards"></div>
 
 <script>
-const suffixes = { "K":1e3, "M":1e6, "B":1e9, "T":1e12, "QD":1e15, "QN":1e18, "SX":1e21, "SP":1e24 };
+const stats = ["Strength","Psychics","Defence","Magic","Health"];
+const suffixes = ["","K","M","B","T","QD","QN","SX","SP"];
+const suffixOptions = suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
 
-function getValueWithSuffix(input){
-  const number=parseFloat(input.value);
-  const suffix=input.nextElementSibling.value.toUpperCase();
+function generateTickOptions(min,max){
+  let options="";
+  for(let t=min; t<=max; t+=0.01){
+    t = Math.round(t*100)/100;
+    options += `<option value="${t}">${t}s</option>`;
+  }
+  return options;
+}
+
+let cardsHTML="";
+stats.forEach(stat=>{
+  const tickOptions = (stat==="Psychics"||stat==="Health") ? generateTickOptions(0.8,1.4) : generateTickOptions(0.66,1.2);
+  cardsHTML += `
+  <div class="stat-card ${stat}" data-stat="${stat}">
+    <div class="stat-label">${stat}</div>
+    <div class="input-group">
+      <input type="text" class="stat-input current" placeholder="Current">
+      <select class="suffix">${suffixOptions}</select>
+    </div>
+    <div class="input-group">
+      <input type="text" class="stat-input rate" placeholder="Per Tick">
+      <select class="suffix">${suffixOptions}</select>
+      <select class="tick">${tickOptions}</select>
+    </div>
+    <div class="input-group">
+      <input type="text" class="stat-input goal" placeholder="Goal">
+      <select class="suffix">${suffixOptions}</select>
+    </div>
+    <div class="result"></div>
+  </div>`;
+});
+document.getElementById("cards").innerHTML = cardsHTML;
+</script>
+
+<button class="btn-calc" onclick="calculateAll()">Calculate</button>
+
+<script>
+const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
+
+function getValue(input){
+  const number = parseFloat(input.value);
+  const suffix = input.nextElementSibling.value.toUpperCase();
   if(isNaN(number)) return NaN;
-  return suffix?number*suffixes[suffix]:number;
+  return suffix?number* (suffixMap[suffix]||1) : number;
 }
 
 function formatTime(seconds){
@@ -201,19 +203,23 @@ function calculateAll(){
   const cards=document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
     const stat=card.getAttribute("data-stat");
-    const current=getValueWithSuffix(card.querySelector(".current"));
-    const rate=getValueWithSuffix(card.querySelector(".rate"));
-    const goal=getValueWithSuffix(card.querySelector(".goal"));
+    const current=getValue(card.querySelector(".current"));
+    const rate=getValue(card.querySelector(".rate"));
+    const goal=getValue(card.querySelector(".goal"));
+    const tick = parseFloat(card.querySelector(".tick").value);
     const resultDiv=card.querySelector(".result");
-    if(isNaN(current)||isNaN(rate)||isNaN(goal)||rate<=0){
-      resultDiv.innerText="Invalid input"; resultDiv.classList.add("show"); return;
+    if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
+      resultDiv.innerText="Invalid input";
+      resultDiv.classList.add("show");
+      return;
     }
     if(current>=goal){
-      resultDiv.innerText="Goal reached!"; resultDiv.classList.add("show"); return;
+      resultDiv.innerText="Goal reached!";
+      resultDiv.classList.add("show");
+      return;
     }
-    const tickSpeed=(stat==="Psychics"||stat==="Health")?0.8:0.66;
     const ticksNeeded=(goal-current)/rate;
-    const seconds=ticksNeeded*tickSpeed;
+    const seconds=ticksNeeded*tick;
     resultDiv.innerText=formatTime(seconds);
     resultDiv.classList.add("show");
   });
