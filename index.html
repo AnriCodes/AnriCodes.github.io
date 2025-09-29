@@ -3,75 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Qi Breakthrough Time Calculator</title>
+  <title>Cultivation Stat Growth Calculator</title>
   <style>
-    /* General Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Body Styling */
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
       color: #333;
+      padding: 20px;
     }
 
-    /* Calculator Container */
     .calculator {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1) inset;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       padding: 30px;
       width: 100%;
-      max-width: 400px;
+      max-width: 900px;
       backdrop-filter: blur(10px);
     }
 
-    /* Heading Styling */
     h2 {
       text-align: center;
       color: #4A90E2;
       margin-bottom: 20px;
-      font-size: 24px;
+      font-size: 26px;
     }
 
-    /* Label Styling */
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #333;
-      font-weight: bold;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
     }
 
-    /* Input Field Styling */
+    th, td {
+      text-align: center;
+      padding: 12px;
+    }
+
+    th {
+      background: #4A90E2;
+      color: white;
+      border-radius: 8px;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(240, 240, 240, 0.7);
+      border-radius: 8px;
+    }
+
     input[type="text"] {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
+      padding: 10px;
       border: none;
       border-radius: 10px;
       background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1) inset;
-      font-size: 16px;
-      color: #333;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      text-align: center;
     }
 
-    /* Button Styling */
     button {
       width: 100%;
       padding: 14px;
       background: #4CAF50;
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 16px;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -82,89 +89,132 @@
       background: #45a049;
     }
 
-    /* Result Styling */
     .result {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 18px;
       font-weight: bold;
       color: #333;
     }
   </style>
 </head>
 <body>
-
   <div class="calculator">
-    <h2>Qi Breakthrough Time Calculator</h2>
-    <label for="currentQi">Current Qi</label>
-    <input type="text" id="currentQi" placeholder="e.g., 2K">
-    <label for="maxQi">Max Qi</label>
-    <input type="text" id="maxQi" placeholder="e.g., 100K">
-    <label for="qiRate">Qi per second</label>
-    <input type="text" id="qiRate" placeholder="e.g., 2K">
-    <button onclick="calculateTime()">Calculate Breakthrough Time</button>
-    <div class="result" id="resultText"></div>
+    <h2>Cultivation Stat Growth Calculator</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Stat</th>
+          <th>Current</th>
+          <th>Per Tick</th>
+          <th>Goal</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-stat="Strength">
+          <td>Strength</td>
+          <td><input type="text" class="current"></td>
+          <td><input type="text" class="rate"></td>
+          <td><input type="text" class="goal"></td>
+          <td class="result"></td>
+        </tr>
+        <tr data-stat="Psychics">
+          <td>Psychics</td>
+          <td><input type="text" class="current"></td>
+          <td><input type="text" class="rate"></td>
+          <td><input type="text" class="goal"></td>
+          <td class="result"></td>
+        </tr>
+        <tr data-stat="Defence">
+          <td>Defence</td>
+          <td><input type="text" class="current"></td>
+          <td><input type="text" class="rate"></td>
+          <td><input type="text" class="goal"></td>
+          <td class="result"></td>
+        </tr>
+        <tr data-stat="Magic">
+          <td>Magic</td>
+          <td><input type="text" class="current"></td>
+          <td><input type="text" class="rate"></td>
+          <td><input type="text" class="goal"></td>
+          <td class="result"></td>
+        </tr>
+        <tr data-stat="Health">
+          <td>Health</td>
+          <td><input type="text" class="current"></td>
+          <td><input type="text" class="rate"></td>
+          <td><input type="text" class="goal"></td>
+          <td class="result"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button onclick="calculateAll()">Calculate</button>
   </div>
 
   <script>
-    function parseNumber(value) {
-      const suffixes = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
-      const regex = /^(\d+(\.\d+)?)\s*([KMB])?$/i;
-      const match = value.trim().toUpperCase().match(regex);
-      if (!match) return NaN;
-      const number = parseFloat(match[1]);
-      const suffix = match[3];
-      return suffix ? number * suffixes[suffix] : number;
-    }
+    const suffixes = {
+      "K": 1e3,
+      "M": 1e6,
+      "B": 1e9,
+      "T": 1e12,
+      "QD": 1e15,
+      "QN": 1e18,
+      "SX": 1e21,
+      "SP": 1e24
+    };
 
-    function formatNumber(value) {
-      const suffixes = ["", "K", "M", "B"];
-      let suffixIndex = 0;
-      while (value >= 1000 && suffixIndex < suffixes.length - 1) {
-        value /= 1000;
-        suffixIndex++;
+    function parseNumber(value) {
+      if (!value) return NaN;
+      value = value.trim().toUpperCase();
+      const regex = /^(\d+(\.\d+)?)([A-Z]{1,2})?$/;
+      const match = value.match(regex);
+      if (!match) return NaN;
+      let number = parseFloat(match[1]);
+      const suffix = match[3];
+      if (suffix && suffixes[suffix]) {
+        number *= suffixes[suffix];
       }
-      return value.toFixed(2) + suffixes[suffixIndex];
+      return number;
     }
 
     function formatTime(seconds) {
-      const hrs = Math.floor(seconds / 3600);
+      if (seconds <= 0) return "Goal reached!";
+      const days = Math.floor(seconds / 86400);
+      const hrs = Math.floor((seconds % 86400) / 3600);
       const mins = Math.floor((seconds % 3600) / 60);
       const secs = Math.floor(seconds % 60);
       let timeString = '';
-      if (hrs > 0) timeString += hrs + 'h ';
-      if (mins > 0 || hrs > 0) timeString += mins + 'm ';
+      if (days > 0) timeString += days + 'd ';
+      if (hrs > 0 || days > 0) timeString += hrs + 'h ';
+      if (mins > 0 || hrs > 0 || days > 0) timeString += mins + 'm ';
       timeString += secs + 's';
       return timeString;
     }
 
-    function calculateTime() {
-      const currentQi = parseNumber(document.getElementById('currentQi').value);
-      const maxQi = parseNumber(document.getElementById('maxQi').value);
-      const qiRate = parseNumber(document.getElementById('qiRate').value);
+    function calculateAll() {
+      const rows = document.querySelectorAll("tbody tr");
 
-      const resultDiv = document.getElementById('resultText');
+      rows.forEach(row => {
+        const stat = row.getAttribute("data-stat");
+        const current = parseNumber(row.querySelector(".current").value);
+        const rate = parseNumber(row.querySelector(".rate").value);
+        const goal = parseNumber(row.querySelector(".goal").value);
+        const resultCell = row.querySelector(".result");
 
-      if (isNaN(currentQi) || isNaN(maxQi) || isNaN(qiRate)) {
-        resultDiv.innerText = "Please fill in all fields with valid numbers.";
-        return;
-      }
-      if (qiRate <= 0) {
-        resultDiv.innerText = "Qi rate must be greater than zero.";
-        return;
-      }
-      if (currentQi >= maxQi) {
-        resultDiv.innerText = "You've already reached or exceeded your max Qi!";
-        return;
-      }
+        if (isNaN(current) || isNaN(rate) || isNaN(goal) || rate <= 0) {
+          resultCell.innerText = "Invalid input";
+          return;
+        }
+        if (current >= goal) {
+          resultCell.innerText = "Goal reached!";
+          return;
+        }
 
-      const qiNeeded = maxQi - currentQi;
-      const seconds = qiNeeded / qiRate;
+        const tickSpeed = (stat === "Psychics" || stat === "Health") ? 0.8 : 0.66;
+        const ticksNeeded = (goal - current) / rate;
+        const seconds = ticksNeeded * tickSpeed;
 
-      resultDiv.innerText = 
-        "Time to breakthrough: " + formatNumber(seconds) + " (" + formatTime(seconds) + ")";
+        resultCell.innerText = formatTime(seconds);
+      });
     }
   </script>
-
 </body>
 </html>
