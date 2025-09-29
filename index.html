@@ -123,6 +123,7 @@ h1 {
 .Defence { border-left:6px solid #3498db; }
 .Magic { border-left:6px solid #2ecc71; }
 .Health { border-left:6px solid #f39c12; }
+.Tokens { border-left:6px solid #f1c40f; }
 
 @media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
@@ -140,14 +141,22 @@ h1 {
 <div id="cards"></div>
 
 <script>
-const stats = ["Strength","Psychics","Defence","Magic","Health"];
+const stats = ["Strength","Psychics","Defence","Magic","Health","Tokens"];
 const suffixes = ["","K","M","B","T","QD","QN","SX","SP"];
 const suffixOptions = suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
 
-function generateTickOptions(min,max){
+function generateTickOptions(min,max,step){
   let options="";
-  for(let t=min; t<=max; t+=0.01){
+  for(let t=min; t<=max; t+=step){
     t = Math.round(t*100)/100;
+    options += `<option value="${t}">${t}s</option>`;
+  }
+  return options;
+}
+
+function generateTokensTickOptions(minSec,maxSec){
+  let options="";
+  for(let t=minSec; t<=maxSec; t++){
     options += `<option value="${t}">${t}s</option>`;
   }
   return options;
@@ -155,7 +164,15 @@ function generateTickOptions(min,max){
 
 let cardsHTML="";
 stats.forEach(stat=>{
-  const tickOptions = (stat==="Psychics"||stat==="Health") ? generateTickOptions(0.8,1.4) : generateTickOptions(0.66,1.2);
+  let tickOptions;
+  if(stat==="Psychics"||stat==="Health"){
+    tickOptions = generateTickOptions(0.8,1.4,0.01);
+  } else if(stat==="Tokens"){
+    tickOptions = generateTokensTickOptions(30,60);
+  } else {
+    tickOptions = generateTickOptions(0.66,1.2,0.01);
+  }
+
   cardsHTML += `
   <div class="stat-card ${stat}" data-stat="${stat}">
     <div class="stat-label">${stat}</div>
@@ -187,16 +204,29 @@ function getValue(input){
   const number = parseFloat(input.value);
   const suffix = input.nextElementSibling.value.toUpperCase();
   if(isNaN(number)) return NaN;
-  return suffix?number* (suffixMap[suffix]||1) : number;
+  return suffix?number*(suffixMap[suffix]||1):number;
 }
 
 function formatTime(seconds){
   if(seconds<=0) return "Goal reached!";
-  const d=Math.floor(seconds/86400),
-        h=Math.floor((seconds%86400)/3600),
-        m=Math.floor((seconds%3600)/60),
-        s=Math.floor(seconds%60);
-  return (d?d+'d ':'')+(h||d?h+'h ':'')+(m||h||d?m+'m ':'')+s+'s';
+  const years = Math.floor(seconds/31536000);
+  seconds %= 31536000;
+  const months = Math.floor(seconds/2592000);
+  seconds %= 2592000;
+  const days=Math.floor(seconds/86400);
+  seconds%=86400;
+  const hours=Math.floor(seconds/3600);
+  seconds%=3600;
+  const mins=Math.floor(seconds/60);
+  seconds=Math.floor(seconds%60);
+  let str="";
+  if(years) str+=years+'y ';
+  if(months) str+=months+'mo ';
+  if(days) str+=days+'d ';
+  if(hours) str+=hours+'h ';
+  if(mins) str+=mins+'m ';
+  str+=seconds+'s';
+  return str;
 }
 
 function calculateAll(){
@@ -206,18 +236,21 @@ function calculateAll(){
     const current=getValue(card.querySelector(".current"));
     const rate=getValue(card.querySelector(".rate"));
     const goal=getValue(card.querySelector(".goal"));
-    const tick = parseFloat(card.querySelector(".tick").value);
+    const tick=parseFloat(card.querySelector(".tick").value);
     const resultDiv=card.querySelector(".result");
+
     if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
       resultDiv.innerText="Invalid input";
       resultDiv.classList.add("show");
       return;
     }
+
     if(current>=goal){
       resultDiv.innerText="Goal reached!";
       resultDiv.classList.add("show");
       return;
     }
+
     const ticksNeeded=(goal-current)/rate;
     const seconds=ticksNeeded*tick;
     resultDiv.innerText=formatTime(seconds);
