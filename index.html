@@ -3,102 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cultivation Stat Growth Calculator</title>
+<title>🦾 Super Power Training League Calculator</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+
 body {
-  background: linear-gradient(135deg,#89f7fe,#66a6ff);
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:flex-start;
   padding:40px 20px;
 }
+
 h1 {
-  text-align:center;
   width:100%;
+  text-align:center;
+  font-size:2rem;
   color:#fff;
   margin-bottom:30px;
-  font-size:2rem;
-  text-shadow:0 2px 5px rgba(0,0,0,0.3);
+  text-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
-.calculator { width:100%; max-width:950px; }
+
+.calculator { width:100%; max-width:1000px; }
 
 .stat-card {
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+  backdrop-filter: blur(12px);
   border-radius: 20px;
-  padding: 15px;
+  padding: 15px 20px;
   margin-bottom: 20px;
   display:flex;
   flex-wrap: wrap;
   align-items:center;
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.stat-card:hover { transform: translateY(-5px); }
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
 
-.stat-label { flex:0 0 100px; font-weight:bold; color:#fff; font-size:1rem; margin-right:10px; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
+.stat-label {
+  flex:0 0 110px;
+  font-weight:bold;
+  font-size:1rem;
+  margin-right:12px;
+  color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
 
 .input-group {
   display:flex;
-  margin:3px;
+  margin:4px;
 }
 .stat-input {
   flex:1;
-  padding:6px;
+  padding:7px;
   border-radius:6px 0 0 6px;
   border:none;
-  background:rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   text-align:center;
-  font-size:0.9rem;
+  font-size:0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.stat-input:focus { outline:none; transform:scale(1.05); }
+.stat-input:focus {
+  outline:none;
+  transform:scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) inset;
+}
 
 .suffix {
-  padding:6px;
+  padding:7px;
   border-radius:0 6px 6px 0;
   border:none;
-  background:rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.85);
   cursor:pointer;
   font-weight:bold;
   text-transform:uppercase;
+  transition: background 0.2s ease;
 }
+.suffix:hover { background: rgba(255,255,255,1); }
 
 .result {
   flex:1 1 100%;
   color:#fff;
   font-weight:bold;
-  font-size:0.95rem;
+  font-size:1rem;
   text-align:center;
   opacity:0;
   transition: opacity 0.5s ease;
-  margin-top:5px;
+  margin-top:6px;
 }
 .result.show { opacity:1; }
 
 .btn-calc {
   width:100%;
-  padding:14px;
-  font-size:1.1rem;
+  padding:15px;
+  font-size:1.15rem;
   border:none;
-  border-radius:12px;
+  border-radius:16px;
   cursor:pointer;
   background: linear-gradient(90deg, #ff8a00, #e52e71);
   color:#fff;
-  box-shadow:0 6px 12px rgba(0,0,0,0.2);
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top:12px;
 }
-.btn-calc:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+.btn-calc:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+}
 
-/* Color accents for each stat */
+/* Stat Colors */
 .Strength { border-left:6px solid #ff4c4c; }
 .Psychics { border-left:6px solid #9b59b6; }
 .Defence { border-left:6px solid #3498db; }
 .Magic { border-left:6px solid #2ecc71; }
 .Health { border-left:6px solid #f39c12; }
 
-@media(max-width:700px) {
+@media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
   .stat-label,.result { text-align:left; }
   .input-group { width:100%; }
@@ -106,10 +130,11 @@ h1 {
 </style>
 </head>
 <body>
-<div class="calculator">
-<h1>Cultivation Stat Growth Calculator</h1>
 
-<!-- Function to generate each stat card -->
+<div class="calculator">
+<h1>🦾 Super Power Training League Calculator</h1>
+
+<!-- Stat Card Template -->
 <div class="stat-card Strength" data-stat="Strength">
   <div class="stat-label">Strength</div>
   <div class="input-group"><input type="text" class="stat-input current" placeholder="Current"><select class="suffix"><option value="">None</option><option>K</option><option>M</option><option>B</option><option>T</option><option>QD</option><option>QN</option><option>SX</option><option>SP</option></select></div>
@@ -156,20 +181,23 @@ h1 {
 <script>
 const suffixes = { "K":1e3, "M":1e6, "B":1e9, "T":1e12, "QD":1e15, "QN":1e18, "SX":1e21, "SP":1e24 };
 
-function getValueWithSuffix(input) {
-  const number = parseFloat(input.value);
-  const suffix = input.nextElementSibling.value.toUpperCase();
-  if (isNaN(number)) return NaN;
-  return suffix ? number * suffixes[suffix] : number;
+function getValueWithSuffix(input){
+  const number=parseFloat(input.value);
+  const suffix=input.nextElementSibling.value.toUpperCase();
+  if(isNaN(number)) return NaN;
+  return suffix?number*suffixes[suffix]:number;
 }
 
-function formatTime(seconds) {
+function formatTime(seconds){
   if(seconds<=0) return "Goal reached!";
-  const d=Math.floor(seconds/86400), h=Math.floor((seconds%86400)/3600), m=Math.floor((seconds%3600)/60), s=Math.floor(seconds%60);
+  const d=Math.floor(seconds/86400),
+        h=Math.floor((seconds%86400)/3600),
+        m=Math.floor((seconds%3600)/60),
+        s=Math.floor(seconds%60);
   return (d?d+'d ':'')+(h||d?h+'h ':'')+(m||h||d?m+'m ':'')+s+'s';
 }
 
-function calculateAll() {
+function calculateAll(){
   const cards=document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
     const stat=card.getAttribute("data-stat");
