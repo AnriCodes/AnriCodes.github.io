@@ -5,92 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🦾 Super Power Training League Calculator</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{
-  background:linear-gradient(135deg,#1b0029,#2d004d);
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  padding:30px 15px;
-  color:white;
+  padding:40px 20px;
 }
-h1{
-  width:100%;text-align:center;
-  font-size:2rem;margin-bottom:20px;
-  text-shadow:0 4px 10px rgba(0,0,0,0.6);
-}
-.calculator{width:100%;max-width:900px;}
-.stat-card{
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(8px);
-  border-radius:16px;
-  padding:14px 18px;
-  margin-bottom:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.3);
-}
-.stat-label{font-weight:bold;font-size:1rem;margin-bottom:8px;}
-.input-group{display:flex;margin-bottom:6px;}
-.stat-input{
-  flex:1;padding:7px;border:none;
-  border-radius:6px 0 0 6px;
-  background:#fff;text-align:center;
-  font-size:0.95rem;
-}
-.suffix,.tick{
-  padding:7px;border:none;
-  background:#ddd;font-weight:bold;
-  cursor:pointer;
-}
-.suffix{border-radius:0 6px 6px 0;}
-.tick{border-radius:6px;margin-left:6px;}
-.result{
-  font-weight:bold;margin-top:6px;
-  font-size:0.95rem;text-align:center;
-}
-.btn{
-  padding:10px 18px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:700;
+h1 {
+  width:100%;
+  text-align:center;
+  font-size:2rem;
   color:#fff;
-  background:linear-gradient(90deg,#6a11cb,#2575fc);
-  box-shadow:0 6px 16px rgba(0,0,0,0.3);
-  transition:transform .2s;
+  margin-bottom:30px;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
-.btn:hover{transform:scale(1.05);}
-.controls{
+.calculator { width:100%; max-width:1000px; }
+.stat-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
   display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:10px;
-}
-.cal-block{
-  display:flex;
-  flex-direction:column;
+  flex-wrap: wrap;
   align-items:center;
-  margin-top:10px;
-  gap:6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.cal-input{
-  padding:6px 10px;
-  border-radius:8px;
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+.stat-label {
+  flex:0 0 110px;
+  font-weight:bold;
+  font-size:1rem;
+  margin-right:12px;
+  color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
+.input-group { display:flex; margin:4px; }
+.stat-input {
+  flex:1;
+  padding:7px;
+  border-radius:6px 0 0 6px;
   border:none;
-  min-width:200px;
+  background: rgba(255,255,255,0.95);
+  text-align:center;
+  font-size:0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.note{font-size:12px;margin-top:4px;}
+.stat-input:focus {
+  outline:none;
+  transform:scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) inset;
+}
+.suffix, .tick {
+  padding:7px;
+  border:none;
+  background: rgba(255,255,255,0.85);
+  cursor:pointer;
+  font-weight:bold;
+  text-transform:uppercase;
+  transition: background 0.2s ease;
+}
+.suffix:hover, .tick:hover { background: rgba(255,255,255,1); }
+.suffix { border-radius:0 6px 0 0; }
+.tick { border-radius:0 0 6px 0; margin-left:2px; }
+.result {
+  flex:1 1 100%;
+  color:#fff;
+  font-weight:bold;
+  font-size:1rem;
+  text-align:center;
+  opacity:0;
+  transition: opacity 0.5s ease;
+  margin-top:6px;
+}
+.result.show { opacity:1; }
+.btn-calc {
+  width:100%;
+  padding:15px;
+  font-size:1.15rem;
+  border:none;
+  border-radius:16px;
+  cursor:pointer;
+  background: linear-gradient(90deg, #ff8a00, #e52e71);
+  color:#fff;
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top:12px;
+}
+.btn-calc:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+}
 /* Stat Colors */
-.Strength{border-left:6px solid #ff4c4c;}
-.Psychics{border-left:6px solid #9b59b6;}
-.Defence{border-left:6px solid #3498db;}
-.Magic{border-left:6px solid #2ecc71;}
-.Health{border-left:6px solid #f39c12;}
-.Tokens{border-left:6px solid #f1c40f;}
-.Fireball{border-left:6px solid #e91e63;}
+.Strength { border-left:6px solid #ff4c4c; }
+.Psychics { border-left:6px solid #9b59b6; }
+.Defence { border-left:6px solid #3498db; }
+.Magic { border-left:6px solid #2ecc71; }
+.Health { border-left:6px solid #f39c12; }
+.Tokens { border-left:6px solid #f1c40f; }
 @media(max-width:700px){
-  .input-group{flex-wrap:wrap}
-  .tick{margin-left:0;margin-top:4px}
+  .stat-card { flex-direction:column; align-items:flex-start; }
+  .stat-label,.result { text-align:left; }
+  .input-group { width:100%; flex-wrap:wrap; }
+  .tick { margin-left:0; margin-top:2px; }
 }
 </style>
 </head>
@@ -98,160 +122,109 @@ h1{
 <div class="calculator">
 <h1>🦾 Super Power Training League Calculator</h1>
 <div id="cards"></div>
-
-<!-- Calculate button at bottom -->
-<div class="controls">
-  <button class="btn" onclick="calculateAll()">Calculate</button>
-</div>
-</div>
-
 <script>
-const stats=["Strength","Psychics","Defence","Magic","Health","Tokens","Fireball"];
-const suffixes=["","K","M","B","T","QD","QN","SX","SP"];
-const suffixOptions=suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
+const stats = ["Strength","Psychics","Defence","Magic","Health","Tokens"];
+const suffixes = ["","K","M","B","T","QD","QN","SX","SP"];
+const suffixOptions = suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
 function generateTickOptions(min,max,step){
   let options="";
-  for(let t=min;t<=max;t+=step){
-    t=Math.round(t*100)/100;
-    options+=`<option value="${t}">${t}s</option>`;
+  for(let t=min; t<=max; t+=step){
+    t = Math.round(t*100)/100;
+    options += `<option value="${t}">${t}s</option>`;
   }
   return options;
 }
 function generateTokensTickOptions(minSec,maxSec){
   let options="";
-  for(let t=minSec;t<=maxSec;t++){
-    options+=`<option value="${t}">${t}s</option>`;
+  for(let t=minSec; t<=maxSec; t++){
+    options += `<option value="${t}">${t}s</option>`;
   }
   return options;
 }
 let cardsHTML="";
 stats.forEach(stat=>{
-  let inner="";
-  if(stat==="Fireball"){
-    inner=`
-      <div class="input-group">
-        <input type="text" class="stat-input power" placeholder="Power">
-        <select class="suffix">${suffixOptions}</select>
-      </div>
-      <div class="input-group">
-        <input type="text" class="stat-input magic" placeholder="Magic">
-        <select class="suffix">${suffixOptions}</select>
-      </div>
-      <div class="result"></div>
-      <div class="cal-block">
-        <input id="store-cal-input" class="cal-input" placeholder="Calibrate expected damage (optional)" />
-        <div class="controls">
-          <button class="btn" onclick="calibrate()">Calibrate</button>
-          <button class="btn" onclick="resetCalibration()">Reset</button>
-        </div>
-      </div>
-      <div class="note">Uses formula: 0.0192·Power^0.682 + 274.5·Magic^0.438</div>
-    `;
-  }else{
-    let tickOptions;
-    if(stat==="Psychics"||stat==="Health"){
-      tickOptions=generateTickOptions(0.8,1.4,0.01);
-    }else if(stat==="Tokens"){
-      tickOptions=generateTokensTickOptions(30,60);
-    }else{
-      tickOptions=generateTickOptions(0.66,1.2,0.01);
-    }
-    inner=`
-      <div class="input-group">
-        <input type="text" class="stat-input current" placeholder="Current">
-        <select class="suffix">${suffixOptions}</select>
-      </div>
-      <div class="input-group">
-        <input type="text" class="stat-input rate" placeholder="Per Tick">
-        <select class="suffix">${suffixOptions}</select>
-        <select class="tick">${tickOptions}</select>
-      </div>
-      <div class="input-group">
-        <input type="text" class="stat-input goal" placeholder="Goal">
-        <select class="suffix">${suffixOptions}</select>
-      </div>
-      <div class="result"></div>
-    `;
+  let tickOptions;
+  if(stat==="Psychics"||stat==="Health"){
+    tickOptions = generateTickOptions(0.8,1.4,0.01);
+  } else if(stat==="Tokens"){
+    tickOptions = generateTokensTickOptions(30,60);
+  } else {
+    tickOptions = generateTickOptions(0.66,1.2,0.01);
   }
-  cardsHTML+=`
-    <div class="stat-card ${stat}" data-stat="${stat}">
-      <div class="stat-label">${stat}</div>
-      ${inner}
-    </div>`;
+  cardsHTML += `
+  <div class="stat-card ${stat}" data-stat="${stat}">
+    <div class="stat-label">${stat}</div>
+    <div class="input-group">
+      <input type="text" class="stat-input current" placeholder="Current">
+      <select class="suffix">${suffixOptions}</select>
+    </div>
+    <div class="input-group">
+      <input type="text" class="stat-input rate" placeholder="Per Tick">
+      <select class="suffix">${suffixOptions}</select>
+      <select class="tick">${tickOptions}</select>
+    </div>
+    <div class="input-group">
+      <input type="text" class="stat-input goal" placeholder="Goal">
+      <select class="suffix">${suffixOptions}</select>
+    </div>
+    <div class="result"></div>
+  </div>`;
 });
-document.getElementById("cards").innerHTML=cardsHTML;
-
-// Helpers
-const suffixMap={"K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24};
+document.getElementById("cards").innerHTML = cardsHTML;
+</script>
+<button class="btn-calc" onclick="calculateAll()">Calculate</button>
+<script>
+const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
 function getValue(input){
-  if(!input)return NaN;
-  const number=parseFloat(input.value);
-  const suffix=input.nextElementSibling?input.nextElementSibling.value.toUpperCase():"";
-  if(isNaN(number))return NaN;
+  const number = parseFloat(input.value);
+  const suffix = input.nextElementSibling.value.toUpperCase();
+  if(isNaN(number)) return NaN;
   return suffix?number*(suffixMap[suffix]||1):number;
 }
 function formatTime(seconds){
-  if(seconds<=0)return"Goal reached!";
-  const years=Math.floor(seconds/31536000);seconds%=31536000;
-  const months=Math.floor(seconds/2592000);seconds%=2592000;
-  const days=Math.floor(seconds/86400);seconds%=86400;
-  const hours=Math.floor(seconds/3600);seconds%=3600;
-  const mins=Math.floor(seconds/60);seconds=Math.floor(seconds%60);
-  let str="";if(years)str+=years+"y ";if(months)str+=months+"mo ";
-  if(days)str+=days+"d ";if(hours)str+=hours+"h ";
-  if(mins)str+=mins+"m ";str+=seconds+"s";return str;
+  if(seconds<=0) return "Goal reached!";
+  const years = Math.floor(seconds/31536000);
+  seconds %= 31536000;
+  const months = Math.floor(seconds/2592000);
+  seconds %= 2592000;
+  const days=Math.floor(seconds/86400);
+  seconds%=86400;
+  const hours=Math.floor(seconds/3600);
+  seconds%=3600;
+  const mins=Math.floor(seconds/60);
+  seconds=Math.floor(seconds%60);
+  let str="";
+  if(years) str+=years+'y ';
+  if(months) str+=months+'mo ';
+  if(days) str+=days+'d ';
+  if(hours) str+=hours+'h ';
+  if(mins) str+=mins+'m ';
+  str+=seconds+'s';
+  return str;
 }
-
-// Fireball calibration
-let calA=0.0192,calP=0.682,calB=274.5,calQ=0.438;
-function calibrate(){
-  const expected=parseFloat(document.getElementById("store-cal-input").value);
-  if(isNaN(expected)||expected<=0)return;
-  localStorage.setItem("fireballCal",expected);
-  alert("Calibration stored! Recalculate to apply.");
-}
-function resetCalibration(){
-  localStorage.removeItem("fireballCal");
-  alert("Calibration reset!");
-}
-
 function calculateAll(){
   const cards=document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
     const stat=card.getAttribute("data-stat");
-    const resultDiv=card.querySelector(".result");
-
-    if(stat==="Fireball"){
-      const rawPower=getValue(card.querySelector(".power"));
-      const rawMagic=getValue(card.querySelector(".magic"));
-      if(isNaN(rawPower)||isNaN(rawMagic)){
-        resultDiv.innerText="Invalid input";return;
-      }
-      let damage=calA*Math.pow(rawPower,calP)+calB*Math.pow(rawMagic,calQ);
-      // Apply calibration if available
-      const expected=localStorage.getItem("fireballCal");
-      if(expected){
-        const current=damage;
-        const ratio=expected/current;
-        damage=damage*ratio;
-      }
-      resultDiv.innerText="Damage: "+Math.round(damage).toLocaleString("en-US");
-      return;
-    }
-
     const current=getValue(card.querySelector(".current"));
     const rate=getValue(card.querySelector(".rate"));
     const goal=getValue(card.querySelector(".goal"));
     const tick=parseFloat(card.querySelector(".tick").value);
+    const resultDiv=card.querySelector(".result");
     if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
-      resultDiv.innerText="Invalid input";return;
+      resultDiv.innerText="Invalid input";
+      resultDiv.classList.add("show");
+      return;
     }
     if(current>=goal){
-      resultDiv.innerText="Goal reached!";return;
+      resultDiv.innerText="Goal reached!";
+      resultDiv.classList.add("show");
+      return;
     }
     const ticksNeeded=(goal-current)/rate;
     const seconds=ticksNeeded*tick;
     resultDiv.innerText=formatTime(seconds);
+    resultDiv.classList.add("show");
   });
 }
 </script>
