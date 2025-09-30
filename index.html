@@ -8,47 +8,49 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
 
 body {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg, #1b0034, #3d0066, #2a004f);
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:flex-start;
   padding:40px 20px;
+  color:#fff;
 }
 
 h1 {
   width:100%;
   text-align:center;
-  font-size:2rem;
-  color:#fff;
+  font-size:2.2rem;
   margin-bottom:30px;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  color:#e0c3ff;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 .calculator { width:100%; max-width:1000px; }
 
 .stat-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-  backdrop-filter: blur(12px);
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+  backdrop-filter: blur(14px);
   border-radius: 20px;
-  padding: 12px 18px;
+  padding: 18px 20px;
   margin-bottom: 20px;
   display:flex;
   flex-wrap: wrap;
   align-items:center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-size: 0.95rem;
 }
 .stat-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.65);
 }
 
 .stat-label {
-  flex:0 0 130px;
+  flex:0 0 140px;
   font-weight:bold;
-  color:#fff;
+  font-size:1.05rem;
+  margin-right:12px;
+  color:#e6d6ff;
   text-shadow:0 1px 3px rgba(0,0,0,0.5);
 }
 
@@ -58,61 +60,53 @@ h1 {
 }
 .stat-input {
   flex:1;
-  padding:7px;
+  padding:8px;
   border-radius:6px 0 0 6px;
   border:none;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.9);
   text-align:center;
   font-size:0.95rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.stat-input:focus {
-  outline:none;
-  transform:scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2) inset;
-}
-
 .suffix, .tick {
-  padding:7px;
+  padding:8px;
   border:none;
   background: rgba(255,255,255,0.85);
   cursor:pointer;
   font-weight:bold;
   text-transform:uppercase;
-  transition: background 0.2s ease;
 }
-.suffix:hover, .tick:hover { background: rgba(255,255,255,1); }
-
-.suffix { border-radius:0 6px 0 0; }
-.tick { border-radius:0 0 6px 0; margin-left:2px; }
+.suffix { border-radius:0 6px 6px 0; }
+.tick { border-radius:6px; margin-left:4px; }
 
 .result {
   flex:1 1 100%;
-  color:#fff;
   font-weight:bold;
+  font-size:1rem;
   text-align:center;
   opacity:0;
   transition: opacity 0.5s ease;
-  margin-top:6px;
+  margin-top:8px;
+  color:#ffdbff;
 }
 .result.show { opacity:1; }
 
 .btn-calc {
   width:100%;
-  padding:14px;
-  font-size:1.1rem;
+  padding:15px;
+  font-size:1.15rem;
   border:none;
   border-radius:16px;
   cursor:pointer;
-  background: linear-gradient(90deg, #ff8a00, #e52e71);
+  background: linear-gradient(90deg, #8e2de2, #4a00e0);
   color:#fff;
-  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  font-weight:bold;
+  box-shadow:0 8px 20px rgba(0,0,0,0.45);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-top:12px;
 }
 .btn-calc:hover {
   transform:translateY(-3px);
-  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  box-shadow:0 12px 30px rgba(0,0,0,0.6);
 }
 
 /* Stat Colors */
@@ -122,29 +116,30 @@ h1 {
 .Magic { border-left:6px solid #2ecc71; }
 .Health { border-left:6px solid #f39c12; }
 .Tokens { border-left:6px solid #f1c40f; }
-.FireballDamage { border-left:6px solid #e74c3c; background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(255,100,50,0.05)); }
+.Fireball { border-left:6px solid #ff2d95; }
 
 @media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
   .stat-label,.result { text-align:left; }
   .input-group { width:100%; flex-wrap:wrap; }
-  .tick { margin-left:0; margin-top:2px; }
 }
 </style>
 </head>
 <body>
 
 <div class="calculator">
-<h1>🦾 Super Power Training League Calculator</h1>
-<div id="cards"></div>
-<button class="btn-calc" onclick="calculateAll()">Calculate</button>
+  <h1>🦾 Super Power Training League Calculator</h1>
+  <div id="cards"></div>
 </div>
+
+<button class="btn-calc" onclick="calculateAll()">Calculate</button>
 
 <script>
 const stats = ["Strength","Psychics","Defence","Magic","Health","Tokens"];
 const suffixes = ["","K","M","B","T","QD","QN","SX","SP"];
 const suffixOptions = suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
 
+// Generate tick options
 function generateTickOptions(min,max,step){
   let options="";
   for(let t=min; t<=max; t+=step){
@@ -153,7 +148,6 @@ function generateTickOptions(min,max,step){
   }
   return options;
 }
-
 function generateTokensTickOptions(minSec,maxSec){
   let options="";
   for(let t=minSec; t<=maxSec; t++){
@@ -162,6 +156,7 @@ function generateTokensTickOptions(minSec,maxSec){
   return options;
 }
 
+// Build cards
 let cardsHTML="";
 stats.forEach(stat=>{
   let tickOptions;
@@ -192,12 +187,11 @@ stats.forEach(stat=>{
     <div class="result"></div>
   </div>`;
 });
-document.getElementById("cards").innerHTML = cardsHTML;
 
-// Fireball Damage card
-const fireballHTML = `
-<div class="stat-card FireballDamage" data-stat="Fireball Damage" data-type="damage">
-  <div class="stat-label">Fireball Damage</div>
+// Fireball Damage card (special)
+cardsHTML += `
+<div class="stat-card Fireball" data-stat="Fireball">
+  <div class="stat-label">🔥 Fireball Damage</div>
   <div class="input-group">
     <input type="text" class="stat-input power" placeholder="Power">
     <select class="suffix">${suffixOptions}</select>
@@ -208,7 +202,8 @@ const fireballHTML = `
   </div>
   <div class="result"></div>
 </div>`;
-document.getElementById("cards").insertAdjacentHTML("beforeend", fireballHTML);
+
+document.getElementById("cards").innerHTML = cardsHTML;
 
 const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
 
@@ -216,21 +211,16 @@ function getValue(input){
   const number = parseFloat(input.value);
   const suffix = input.nextElementSibling.value.toUpperCase();
   if(isNaN(number)) return NaN;
-  return suffix ? number*(suffixMap[suffix]||1) : number;
+  return suffix?number*(suffixMap[suffix]||1):number;
 }
 
 function formatTime(seconds){
   if(seconds<=0) return "Goal reached!";
-  const years = Math.floor(seconds/31536000);
-  seconds %= 31536000;
-  const months = Math.floor(seconds/2592000);
-  seconds %= 2592000;
-  const days=Math.floor(seconds/86400);
-  seconds%=86400;
-  const hours=Math.floor(seconds/3600);
-  seconds%=3600;
-  const mins=Math.floor(seconds/60);
-  seconds=Math.floor(seconds%60);
+  const years = Math.floor(seconds/31536000); seconds %= 31536000;
+  const months = Math.floor(seconds/2592000); seconds %= 2592000;
+  const days=Math.floor(seconds/86400); seconds%=86400;
+  const hours=Math.floor(seconds/3600); seconds%=3600;
+  const mins=Math.floor(seconds/60); seconds=Math.floor(seconds%60);
   let str="";
   if(years) str+=years+'y ';
   if(months) str+=months+'mo ';
@@ -241,55 +231,58 @@ function formatTime(seconds){
   return str;
 }
 
-// Fireball Damage exact formula
-const a = 0.0192;
-const b = 274.5;
-const p1 = 0.682;
-const p2 = 0.438;
+function formatNumber(num){
+  if(num>=1e24) return (num/1e24).toFixed(2)+" SP";
+  if(num>=1e21) return (num/1e21).toFixed(2)+" SX";
+  if(num>=1e18) return (num/1e18).toFixed(2)+" QN";
+  if(num>=1e15) return (num/1e15).toFixed(2)+" QD";
+  if(num>=1e12) return (num/1e12).toFixed(2)+" T";
+  if(num>=1e9) return (num/1e9).toFixed(2)+" B";
+  if(num>=1e6) return (num/1e6).toFixed(2)+" M";
+  if(num>=1e3) return (num/1e3).toFixed(2)+" K";
+  return Math.round(num).toString();
+}
 
 function calculateAll(){
-  const cards = document.querySelectorAll(".stat-card");
+  const cards=document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
-    const statType = card.getAttribute("data-type") || "normal";
-    const resultDiv = card.querySelector(".result");
+    const stat=card.getAttribute("data-stat");
+    const resultDiv=card.querySelector(".result");
 
-    if(statType === "damage"){
-      const rawPower = getValue(card.querySelector(".power"));
-      const rawMagic = getValue(card.querySelector(".magic"));
+    if(stat==="Fireball"){
+      const rawPower=getValue(card.querySelector(".power"));
+      const rawMagic=getValue(card.querySelector(".magic"));
       if(isNaN(rawPower)||isNaN(rawMagic)){
         resultDiv.innerText="Invalid input";
         resultDiv.classList.add("show");
         return;
       }
-      // Scale to avoid JS pow precision errors
-      const scalePower = rawPower / 1e15;
-      const scaleMagic = rawMagic / 1e12;
-      const damage = a*Math.pow(scalePower,p1)*1e9 + b*Math.pow(scaleMagic,p2)*1e6;
-      resultDiv.innerText=`Damage: ${Math.round(damage).toLocaleString('en-US')}`;
+      const damage = 0.0192 * Math.pow(rawPower,0.682) + 274.5 * Math.pow(rawMagic,0.438);
+      resultDiv.innerText="Damage: "+formatNumber(damage);
       resultDiv.classList.add("show");
       return;
     }
 
-    // Normal calculation
-    const current = getValue(card.querySelector(".current"));
-    const rate = getValue(card.querySelector(".rate"));
-    const goal = getValue(card.querySelector(".goal"));
-    const tick = parseFloat(card.querySelector(".tick").value);
+    // normal stats
+    const current=getValue(card.querySelector(".current"));
+    const rate=getValue(card.querySelector(".rate"));
+    const goal=getValue(card.querySelector(".goal"));
+    const tick=parseFloat(card.querySelector(".tick").value);
 
     if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
       resultDiv.innerText="Invalid input";
       resultDiv.classList.add("show");
       return;
     }
-    if(current >= goal){
+    if(current>=goal){
       resultDiv.innerText="Goal reached!";
       resultDiv.classList.add("show");
       return;
     }
 
-    const ticksNeeded = (goal-current)/rate;
-    const seconds = ticksNeeded * tick;
-    resultDiv.innerText = formatTime(seconds);
+    const ticksNeeded=(goal-current)/rate;
+    const seconds=ticksNeeded*tick;
+    resultDiv.innerText=formatTime(seconds);
     resultDiv.classList.add("show");
   });
 }
