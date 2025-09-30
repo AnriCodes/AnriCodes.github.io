@@ -7,7 +7,7 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
 body {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg, #2a1e3c, #4b2a6a);
   min-height:100vh;
   display:flex;
   justify-content:center;
@@ -24,7 +24,7 @@ h1 {
 }
 .calculator { width:100%; max-width:1000px; }
 .stat-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
   backdrop-filter: blur(12px);
   border-radius: 20px;
   padding: 15px 20px;
@@ -171,8 +171,15 @@ stats.forEach(stat=>{
   </div>`;
 });
 document.getElementById("cards").innerHTML = cardsHTML;
+
+// Add live event listeners
+document.querySelectorAll(".stat-card").forEach(card=>{
+  card.querySelectorAll("input, select").forEach(input=>{
+    input.addEventListener("input", calculateAll);
+    input.addEventListener("change", calculateAll);
+  });
+});
 </script>
-<button class="btn-calc" onclick="calculateAll()">Calculate</button>
 <script>
 const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
 function getValue(input){
