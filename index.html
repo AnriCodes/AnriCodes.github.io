@@ -197,7 +197,7 @@ stats.forEach(stat=>{
 });
 document.getElementById("cards").innerHTML = cardsHTML;
 
-// --- Add Fireball Damage card ---
+// --- Fireball Damage Card ---
 const fireballHTML = `
 <div class="stat-card FireballDamage" data-stat="Fireball Damage" data-type="damage">
   <div class="stat-label">Fireball Damage</div>
@@ -219,7 +219,7 @@ function getValue(input){
   const number = parseFloat(input.value);
   const suffix = input.nextElementSibling.value.toUpperCase();
   if(isNaN(number)) return NaN;
-  return suffix?number*(suffixMap[suffix]||1):number;
+  return suffix ? number*(suffixMap[suffix]||1) : number;
 }
 
 function formatTime(seconds){
