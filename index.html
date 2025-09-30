@@ -124,6 +124,7 @@ h1 {
 .Magic { border-left:6px solid #2ecc71; }
 .Health { border-left:6px solid #f39c12; }
 .Tokens { border-left:6px solid #f1c40f; }
+.FireballDamage { border-left:6px solid #e74c3c; }
 
 @media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
@@ -139,6 +140,8 @@ h1 {
 <h1>🦾 Super Power Training League Calculator</h1>
 
 <div id="cards"></div>
+
+<button class="btn-calc" onclick="calculateAll()">Calculate</button>
 
 <script>
 const stats = ["Strength","Psychics","Defence","Magic","Health","Tokens"];
@@ -193,11 +196,23 @@ stats.forEach(stat=>{
   </div>`;
 });
 document.getElementById("cards").innerHTML = cardsHTML;
-</script>
 
-<button class="btn-calc" onclick="calculateAll()">Calculate</button>
+// --- Add Fireball Damage card ---
+const fireballHTML = `
+<div class="stat-card FireballDamage" data-stat="Fireball Damage" data-type="damage">
+  <div class="stat-label">Fireball Damage</div>
+  <div class="input-group">
+    <input type="text" class="stat-input power" placeholder="Power">
+    <select class="suffix">${suffixOptions}</select>
+  </div>
+  <div class="input-group">
+    <input type="text" class="stat-input magic" placeholder="Magic">
+    <select class="suffix">${suffixOptions}</select>
+  </div>
+  <div class="result"></div>
+</div>`;
+document.getElementById("cards").insertAdjacentHTML("beforeend", fireballHTML);
 
-<script>
 const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
 
 function getValue(input){
@@ -230,14 +245,33 @@ function formatTime(seconds){
 }
 
 function calculateAll(){
-  const cards=document.querySelectorAll(".stat-card");
+  const cards = document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
-    const stat=card.getAttribute("data-stat");
-    const current=getValue(card.querySelector(".current"));
-    const rate=getValue(card.querySelector(".rate"));
-    const goal=getValue(card.querySelector(".goal"));
-    const tick=parseFloat(card.querySelector(".tick").value);
-    const resultDiv=card.querySelector(".result");
+    const statType = card.getAttribute("data-type") || "normal";
+    const resultDiv = card.querySelector(".result");
+
+    if(statType === "damage"){
+      // Fireball Damage calculation
+      const power = getValue(card.querySelector(".power"));
+      const magic = getValue(card.querySelector(".magic"));
+
+      if(isNaN(power) || isNaN(magic)){
+        resultDiv.innerText = "Invalid input";
+        resultDiv.classList.add("show");
+        return;
+      }
+
+      const damage = 0.0192 * Math.pow(power, 0.682) + 274.5 * Math.pow(magic, 0.438);
+      resultDiv.innerText = `Damage: ${damage.toLocaleString('en-US')}`;
+      resultDiv.classList.add("show");
+      return;
+    }
+
+    // Existing stat-time calculations
+    const current = getValue(card.querySelector(".current"));
+    const rate = getValue(card.querySelector(".rate"));
+    const goal = getValue(card.querySelector(".goal"));
+    const tick = parseFloat(card.querySelector(".tick").value);
 
     if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
       resultDiv.innerText="Invalid input";
