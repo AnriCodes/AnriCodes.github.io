@@ -41,13 +41,13 @@ h1 {
 }
 .stat-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
 }
 
 .stat-label {
-  flex:0 0 110px;
+  flex:0 0 140px;
   font-weight:bold;
-  font-size:1rem;
+  font-size:1.05rem;
   margin-right:12px;
   color:#fff;
   text-shadow:0 1px 3px rgba(0,0,0,0.5);
@@ -55,16 +55,16 @@ h1 {
 
 .input-group {
   display:flex;
-  margin:4px;
+  margin:6px;
 }
 .stat-input {
   flex:1;
-  padding:7px;
+  padding:9px;
   border-radius:6px 0 0 6px;
   border:none;
   background: rgba(255,255,255,0.95);
   text-align:center;
-  font-size:0.95rem;
+  font-size:1rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .stat-input:focus {
@@ -74,7 +74,7 @@ h1 {
 }
 
 .suffix, .tick {
-  padding:7px;
+  padding:9px;
   border:none;
   background: rgba(255,255,255,0.85);
   cursor:pointer;
@@ -95,26 +95,26 @@ h1 {
   text-align:center;
   opacity:0;
   transition: opacity 0.5s ease;
-  margin-top:6px;
+  margin-top:8px;
 }
 .result.show { opacity:1; }
 
 .btn-calc {
   width:100%;
-  padding:15px;
-  font-size:1.15rem;
+  padding:16px;
+  font-size:1.2rem;
   border:none;
-  border-radius:16px;
+  border-radius:20px;
   cursor:pointer;
   background: linear-gradient(90deg, #ff8a00, #e52e71);
   color:#fff;
-  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top:12px;
+  margin-top:15px;
 }
 .btn-calc:hover {
   transform:translateY(-3px);
-  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  box-shadow:0 15px 35px rgba(0,0,0,0.4);
 }
 
 /* Stat Colors */
@@ -124,7 +124,11 @@ h1 {
 .Magic { border-left:6px solid #2ecc71; }
 .Health { border-left:6px solid #f39c12; }
 .Tokens { border-left:6px solid #f1c40f; }
-.FireballDamage { border-left:6px solid #e74c3c; }
+.FireballDamage { 
+  border-left:6px solid #e74c3c;
+  box-shadow: 0 0 15px rgba(231,76,60,0.6);
+  background: linear-gradient(135deg, rgba(231,76,60,0.2), rgba(255,100,50,0.1));
+}
 
 @media(max-width:700px){
   .stat-card { flex-direction:column; align-items:flex-start; }
@@ -197,7 +201,7 @@ stats.forEach(stat=>{
 });
 document.getElementById("cards").innerHTML = cardsHTML;
 
-// --- Fireball Damage Card ---
+// Fireball Damage Card
 const fireballHTML = `
 <div class="stat-card FireballDamage" data-stat="Fireball Damage" data-type="damage">
   <div class="stat-label">Fireball Damage</div>
@@ -251,7 +255,7 @@ function calculateAll(){
     const resultDiv = card.querySelector(".result");
 
     if(statType === "damage"){
-      // Fireball Damage calculation
+      // Fireball Damage calculation with scaling to handle large numbers
       const power = getValue(card.querySelector(".power"));
       const magic = getValue(card.querySelector(".magic"));
 
@@ -261,8 +265,12 @@ function calculateAll(){
         return;
       }
 
-      const damage = 0.0192 * Math.pow(power, 0.682) + 274.5 * Math.pow(magic, 0.438);
-      resultDiv.innerText = `Damage: ${damage.toLocaleString('en-US')}`;
+      // Scale numbers to avoid JS floating-point issues
+      const scaledPower = power / 1e12;
+      const scaledMagic = magic / 1e12;
+      const damage = 0.0192 * Math.pow(scaledPower, 0.682) * 1e9 + 274.5 * Math.pow(scaledMagic, 0.438) * 1e6;
+
+      resultDiv.innerText = `Damage: ${Math.round(damage).toLocaleString('en-US')}`;
       resultDiv.classList.add("show");
       return;
     }
