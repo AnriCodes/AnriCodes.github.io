@@ -122,10 +122,13 @@ h1 {
 <div class="calculator">
 <h1>🦾 Super Power Training League Calculator</h1>
 <div id="cards"></div>
+</div>
+
 <script>
 const stats = ["Strength","Psychics","Defence","Magic","Health","Tokens"];
 const suffixes = ["","K","M","B","T","QD","QN","SX","SP"];
 const suffixOptions = suffixes.map(s=>`<option value="${s}">${s}</option>`).join("");
+
 function generateTickOptions(min,max,step){
   let options="";
   for(let t=min; t<=max; t+=step){
@@ -134,6 +137,7 @@ function generateTickOptions(min,max,step){
   }
   return options;
 }
+
 function generateTokensTickOptions(minSec,maxSec){
   let options="";
   for(let t=minSec; t<=maxSec; t++){
@@ -141,6 +145,7 @@ function generateTokensTickOptions(minSec,maxSec){
   }
   return options;
 }
+
 let cardsHTML="";
 stats.forEach(stat=>{
   let tickOptions;
@@ -170,24 +175,18 @@ stats.forEach(stat=>{
     <div class="result"></div>
   </div>`;
 });
+
 document.getElementById("cards").innerHTML = cardsHTML;
 
-// Add live event listeners
-document.querySelectorAll(".stat-card").forEach(card=>{
-  card.querySelectorAll("input, select").forEach(input=>{
-    input.addEventListener("input", calculateAll);
-    input.addEventListener("change", calculateAll);
-  });
-});
-</script>
-<script>
 const suffixMap = { "K":1e3,"M":1e6,"B":1e9,"T":1e12,"QD":1e15,"QN":1e18,"SX":1e21,"SP":1e24 };
+
 function getValue(input){
   const number = parseFloat(input.value);
   const suffix = input.nextElementSibling.value.toUpperCase();
   if(isNaN(number)) return NaN;
   return suffix?number*(suffixMap[suffix]||1):number;
 }
+
 function formatTime(seconds){
   if(seconds<=0) return "Goal reached!";
   const years = Math.floor(seconds/31536000);
@@ -209,6 +208,8 @@ function formatTime(seconds){
   str+=seconds+'s';
   return str;
 }
+
+// Live calculation for all stats
 function calculateAll(){
   const cards=document.querySelectorAll(".stat-card");
   cards.forEach(card=>{
@@ -218,6 +219,7 @@ function calculateAll(){
     const goal=getValue(card.querySelector(".goal"));
     const tick=parseFloat(card.querySelector(".tick").value);
     const resultDiv=card.querySelector(".result");
+
     if(isNaN(current)||isNaN(rate)||isNaN(goal)||isNaN(tick)||rate<=0){
       resultDiv.innerText="Invalid input";
       resultDiv.classList.add("show");
@@ -228,12 +230,21 @@ function calculateAll(){
       resultDiv.classList.add("show");
       return;
     }
+
     const ticksNeeded=(goal-current)/rate;
     const seconds=ticksNeeded*tick;
     resultDiv.innerText=formatTime(seconds);
     resultDiv.classList.add("show");
   });
 }
+
+// Add listeners **after cards exist**
+document.querySelectorAll(".stat-card").forEach(card=>{
+  card.querySelectorAll("input, select").forEach(input=>{
+    input.addEventListener("input", calculateAll);
+    input.addEventListener("change", calculateAll);
+  });
+});
 </script>
 </body>
 </html>
