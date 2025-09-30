@@ -241,7 +241,7 @@ function formatTime(seconds){
   return str;
 }
 
-// Fireball Damage exact constants fitted to examples
+// Fireball Damage exact formula
 const a = 0.0192;
 const b = 274.5;
 const p1 = 0.682;
@@ -254,20 +254,23 @@ function calculateAll(){
     const resultDiv = card.querySelector(".result");
 
     if(statType === "damage"){
-      const power = getValue(card.querySelector(".power"));
-      const magic = getValue(card.querySelector(".magic"));
-      if(isNaN(power) || isNaN(magic)){
-        resultDiv.innerText = "Invalid input";
+      const rawPower = getValue(card.querySelector(".power"));
+      const rawMagic = getValue(card.querySelector(".magic"));
+      if(isNaN(rawPower)||isNaN(rawMagic)){
+        resultDiv.innerText="Invalid input";
         resultDiv.classList.add("show");
         return;
       }
-      const damage = a*Math.pow(power,p1) + b*Math.pow(magic,p2);
-      resultDiv.innerText = `Damage: ${Math.round(damage).toLocaleString('en-US')}`;
+      // Scale to avoid JS pow precision errors
+      const scalePower = rawPower / 1e15;
+      const scaleMagic = rawMagic / 1e12;
+      const damage = a*Math.pow(scalePower,p1)*1e9 + b*Math.pow(scaleMagic,p2)*1e6;
+      resultDiv.innerText=`Damage: ${Math.round(damage).toLocaleString('en-US')}`;
       resultDiv.classList.add("show");
       return;
     }
 
-    // Existing stat-time calculations
+    // Normal calculation
     const current = getValue(card.querySelector(".current"));
     const rate = getValue(card.querySelector(".rate"));
     const goal = getValue(card.querySelector(".goal"));
@@ -283,6 +286,7 @@ function calculateAll(){
       resultDiv.classList.add("show");
       return;
     }
+
     const ticksNeeded = (goal-current)/rate;
     const seconds = ticksNeeded * tick;
     resultDiv.innerText = formatTime(seconds);
